@@ -1,6 +1,6 @@
 const express = require('express');
-const db = require('../../config/configdb');
-const Usuario = require('../../Model/userModel/usuario');
+const db = require('../config/configdb');
+const Usuario = require('../Models/userModel');
 const app = express();
 
 const UsuarioController = {

@@ -1,9 +1,9 @@
 const express = require('express');
 const db = require('./config/configdb.js');
-const Usuario = require('./Model/userModel/usuario.js');
+const Usuario = require('./Models/userModel.js');
 const app = express();
 app.use(express.json());
-const UsuarioController = require('./Controller/userController/usuario');
+const UsuarioController = require('./Controllers/userController.js');
 
 
 app.listen(3000, () => {

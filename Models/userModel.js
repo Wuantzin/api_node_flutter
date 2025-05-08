@@ -1,4 +1,4 @@
-const db = require('../../config/configdb');
+const db = require('../config/configdb');
 
 
 const Usuario = {
@@ -11,3 +11,4 @@ const Usuario = {
 };
 
 module.exports = Usuario;
+ 
