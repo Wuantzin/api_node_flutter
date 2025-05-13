@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('./config/configdb.js');
+const pool = require('./config/configdb.js');
 const Usuario = require('./Models/userModel.js');
 const app = express();
 app.use(express.json());
@@ -11,5 +11,6 @@ app.listen(3000, () => {
   });
 
 
-// teste de funcionamento cadastro de usuario
+
   app.post('/usuarios', UsuarioController.cadastrar);
+  app.post('/login', UsuarioController.logar);
