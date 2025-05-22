@@ -14,3 +14,4 @@ app.listen(3000, () => {
 
   app.post('/usuarios', UsuarioController.cadastrar);
   app.post('/login', UsuarioController.logar);
+  app.post('/deletar', UsuarioController.deletar);
