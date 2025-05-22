@@ -18,8 +18,8 @@ const Usuario = {
     },
 
     atualizar: async (dados) => {
-      const { email, senha, nome, celular } = dados;
-      const query = 'CALL prc_atualizar_usuario(?, ?, ?, ?)';
+      const { id, email, senha, nome, celular } = dados;
+      const query = 'CALL prc_atualizar_usuario(?, ?, ?, ?, ?)';
       return db.execute(query, [email, senha, nome, celular]);
     },
 };
