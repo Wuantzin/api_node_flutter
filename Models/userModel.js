@@ -5,7 +5,7 @@ const Usuario = {
     //query para criar o usuario no banco de dados
     criar: async (dados) => {
       const {email, senha, nome, cpf, celular} = dados;
-      const query = 'CALL inserir_usuario(?, ?, ?, ?, ?)';
+      const query = 'CALL prc_inserir_usuario(?, ?, ?, ?, ?)';
       return db.execute(query, [ email, senha, nome, cpf, celular ]);
     },
 
@@ -22,6 +22,11 @@ const Usuario = {
       const query = 'CALL prc_atualizar_usuario(?, ?, ?, ?, ?)';
       return db.execute(query, [email, senha, nome, celular]);
     },
+
+    buscarPorEmail: async (email) => {
+      const [rows] = await db.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
+      return rows.length > 0 ? rows[0] : null;
+    }
 };
 
 module.exports = Usuario;
