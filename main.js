@@ -1,11 +1,8 @@
 const express = require('express');
-const pool = require('./config/configdb.js');
-const Usuario = require('./Models/userModel.js');
 const app = express();
+const User = require('./src/Controllers/userController.js');
+const Adm = require('./src/Controllers/admController.js');
 app.use(express.json());
-const UsuarioController = require('./Controllers/userController.js');
-const admController = require('./Controllers/admController.js');
-const Validacoes = require('./utils/validators.js');
 
 
 app.listen(3000, () => {
@@ -14,9 +11,10 @@ app.listen(3000, () => {
 
 
 
-  app.post('/cadastrar', UsuarioController.cadastrar);
-  app.post('/logar', UsuarioController.logar);
-  app.post('logar/adm', admController.logarAdm);
-  app.put('/deletar', UsuarioController.deletar);
-  app.put('/atualizar', UsuarioController.atualizar);
-  app.get('/buscar/:email', UsuarioController.buscarPorEmail);
+  app.post('/cadastrar', User.cadastrar);
+  app.post('/logar', User.logar);
+  app.post('/logar/adm', Adm.logarAdm);
+  app.put('/deletar', User.deletar);
+  app.put('/atualizar', User.atualizar);
+  app.get('/buscar/email/:email', User.buscarPorEmail);
+  app.get('/buscar/nome/:nome', User.buscarPorNome);
