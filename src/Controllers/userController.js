@@ -18,7 +18,7 @@ const UsuarioController = {
     }
 
     const resposta = await userService.cadastrarUsuario(dados);
-    return res.status(resposta.status).json({ erro: resposta.mensagem });
+    return res.status(resposta.status).json(resposta.mensagem);
   },
 
   logar: async (req, res) => {
@@ -34,7 +34,6 @@ const UsuarioController = {
 
 },
 
-   
   deletar: async (req, res) => {
     const { email } = req.body;
     console.log(`Tentando deletar usuário com email: ${email}`);
@@ -49,7 +48,6 @@ const UsuarioController = {
 
   }, 
 
-  //função de atualizar um usuário
   atualizar: async (req, res) => {
     const { email, senha, nome, celular } = req.body;
 
@@ -69,6 +67,26 @@ const UsuarioController = {
       console.error(err);
       res.status(500).json({ mensagem: 'Erro no servidor!' });
     }
+  },
+
+  atualizarNome: async (req, res) => {
+    const { nome, email } = req.body;
+    console.log(`Tentando atualizar nome do usuário com email: ${email} para ${nome}`);
+
+    const resposta = await userService.atualizarNomeUsuario({ nome, email });
+    return res.status(resposta.status).json(resposta.mensagem);
+  },
+
+  atualizarEmail: async (req, res) => {
+    const { email, novoEmail } = req.body;
+
+    const { valido, mensagem } = Validacoes.validarEmail({ email: novoEmail });
+    if (!valido) {
+      return res.status(400).json({ erro: mensagem });
+    }
+
+    const resposta = await userService.atualizarEmailUsuario({ email: email, novoEmail: novoEmail });
+    return res.status(resposta.status).json({ erro: resposta.mensagem });
   },
 
   buscarPorEmail: async (req, res) => {
@@ -93,6 +111,7 @@ const UsuarioController = {
 
     try {
       const rows = await Usuario.buscarPorNome(nome);
+      console.log('Rows retornadas:', rows);
 
       if (rows) {
         return res.json(rows); // mostra as rows como JSON no Thunder Client

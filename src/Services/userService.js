@@ -1,3 +1,4 @@
+const { atualizarEmail } = require('../Controllers/userController.js');
 const User = require('../Models/userModel.js');
 
 const userService = {
@@ -82,6 +83,43 @@ const userService = {
       return { status: 500, mensagem: 'Erro no servidor!' };
     }
   },
+
+  atualizarNomeUsuario: async ({nome, email}) => {
+    try {
+      console.log(`Tentando atualizar nome do usuário com email: ${email} para ${nome}`);
+      const id = await User.getIdByEmail(email);
+      console.log(`ID do usuário encontrado: ${id}`);
+
+      if (!id) {
+        return { status: 404, mensagem: 'Usuário não encontrado!' };
+      }
+
+      await User.atualizarNome({ id, nome });
+      return { status: 200, mensagem: 'Nome atualizado com sucesso!' };
+
+    } catch (err) {
+      console.error(err);
+      return { status: 500, mensagem: 'Erro no servidor!' };
+    }
+  },
+
+  atualizarEmailUsuario: async ({email, novoEmail}) => {
+    try {
+      console.log(`Tentando atualizar email do usuário com email: ${email} para ${novoEmail}`);
+      const id = await User.getIdByEmail(email);
+      console.log(`Usuário encontrado: ${id}`);
+      if (!id) {
+        return { status: 404, mensagem: 'Usuário não encontrado!' };
+      }
+
+      await User.atualizarEmail({ id, novoEmail });
+      return { status: 200, mensagem: 'Email atualizado com sucesso!' };
+
+    } catch (err) {
+      console.error(err);
+      return { status: 500, mensagem: 'Erro no servidor!' };
+    }
+  }
 }
 
 module.exports = userService;

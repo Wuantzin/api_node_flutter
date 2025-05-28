@@ -14,6 +14,8 @@ app.listen(3000, () => {
   app.post('/cadastrar', User.cadastrar);
   app.post('/logar', User.logar);
   app.post('/logar/adm', Adm.logarAdm);
+  app.put('/atualizar/nome', User.atualizarNome);
+  app.put('/atualizar/email', User.atualizarEmail);
   app.put('/deletar', User.deletar);
   app.put('/atualizar', User.atualizar);
   app.get('/buscar/email/:email', User.buscarPorEmail);
