@@ -5,6 +5,7 @@ const Validacoes = require('../Services/validators.js');
 const userService = require('../Services/userService.js');
 const app = express();
 const cors = require('cors');
+const e = require('express');
 app.use(cors()); 
 
 
@@ -21,7 +22,8 @@ const UsuarioController = {
     return res.status(resposta.status).json(resposta.mensagem);
   },
 
-  logar: async (req, res) => {
+  logar: async (req, res) => { 
+    console.log('Tentando logar usuário.');
     const { email, senha } = req.body;
 
     const { valido, mensagem } = Validacoes.validarLogin({email, senha});
@@ -49,24 +51,11 @@ const UsuarioController = {
   }, 
 
   atualizar: async (req, res) => {
-    const { email, senha, nome, celular } = req.body;
+    const { email, nome, senha, celular, novo_email } = req.body;
 
-    try {
-      //verifica se o email do infeliz tá cadastrado
-      const rows = await Usuario.buscarPorEmail(email);
-      //se tiver, pega o usuário
-      if (!rows) {
-        return res.status(404).json({ mensagem: 'Usuário não encontrado!' });
-      }
+    const resposta = await userService.atualizarUsuario({ email, senha, nome, celular, novo_email });
+    return res.status(resposta.status).json({erro: resposta.mensagem});
 
-        await Usuario.atualizar({ email, senha, nome, celular });
-        res.status(200).json({ mensagem: 'Usuário atualizado com sucesso!' });
-
-    } catch (err) {
-      //aqui tá pra pegar erro no interno
-      console.error(err);
-      res.status(500).json({ mensagem: 'Erro no servidor!' });
-    }
   },
 
   atualizarNome: async (req, res) => {

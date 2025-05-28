@@ -18,9 +18,9 @@ const Usuario = {
     },
 
     atualizar: async (dados) => {
-      const { id, email, senha, nome, celular } = dados;
+      const { email, nome, senha, celular, novo_email } = dados;
       const query = 'CALL prc_atualizar_usuario(?, ?, ?, ?, ?)';
-      return db.execute(query, [email, senha, nome, celular]);
+      return db.execute(query, [email, nome, senha, celular, novo_email]);
     },
 
     buscarPorEmail: async (email) => {

@@ -67,7 +67,7 @@ const userService = {
     }
   },
 
-  atualizarUsuario: async ({email, senha, nome, celular}) => {
+  atualizarUsuario: async ({email, nome, senha, celular, novo_email}) => {
     try {
       const rows = await User.buscarPorEmail(email);
 
@@ -75,7 +75,7 @@ const userService = {
         return { status: 404, mensagem: 'Usuário não encontrado!' };
       }
 
-      await User.atualizar({email, senha, nome, celular});
+      await User.atualizar({email, nome, senha, celular, novo_email});
       return { status: 200, mensagem: 'Usuário atualizado com sucesso!' };
 
     } catch (err) {
