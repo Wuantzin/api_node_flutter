@@ -5,13 +5,13 @@ const Usuario = {
     //query para criar o usuario no banco de dados
     criar: async (dados) => {
       const {nome, email, senha, cpf, celular} = dados;
-      const query = 'CALL prc_inserir_usuario(?, ?, ?, ?, ?)';
-      return db.execute(query, [ nome, email, senha, cpf, celular ]);
+      const query = 'CALL prc_inserir_usuario(?, ?, ?, ?, ?, ?)';
+      return db.execute(query, [ nome, email, senha, cpf, celular, email]);
     },
 
     deletar: async (dados) => {
       const { id } = dados;
-      const query = 'prc_excluir_usuario(?)';
+      const query = 'CALL prc_excluir_usuario(?)';
       return db.execute(query, [id]);
     },
 
@@ -50,18 +50,22 @@ const Usuario = {
     },
 
     getIdByEmail: async (email) => {
+      console.log(email);
       const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE email = ?', [email]);
       console.log(rows[0]);
       return rows.length > 0 ? rows[0].id_usuario : null;
+      console.log('ID do usuário encontrado:', rows[0].id_usuario);
     },
 
     getIdByNome: async (nome) => {
-      const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE LOWER(nome) = ?', [nome.toLowerCase()]);
+      const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE nome = ?', [nome.toLowerCase()]);
       return rows.length > 0 ? rows[0].id_usuario : null;
     },
 
     getLogByUsuario: async (nome) => {
-      const [rows] = await db.execute('SELECT * FROM logs WHERE id_usuario = (SELECT id_usuario FROM usuarios WHERE LOWER(nome) = ?)', [nome.toLowerCase()]);
+      console.log(nome);
+      const [rows] = await db.execute(`SELECT * FROM logs WHERE usuario = ?`, [nome]);
+      console.log('Logs do usuário encontrados:', rows);
       return rows.length > 0 ? rows : null;
     },
 

@@ -20,3 +20,5 @@ app.listen(3000, () => {
   app.put('/atualizar', User.atualizar);
   app.get('/buscar/email/:email', User.buscarPorEmail);
   app.get('/buscar/nome/:nome', User.buscarPorNome);
+  app.get('/usuarios', User.listarUsuarios);
+  app.get('/logs/usuario', User.listarLogsPorUsuario);

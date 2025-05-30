@@ -37,7 +37,7 @@ const UsuarioController = {
 
   deletar: async (req, res) => {
     const { email } = req.body;
-    
+    console.log(email);
     const { valido, mensagem } = Validacoes.validarEmail({email});
     if (!valido) {
       return res.status(400).json({ erro: mensagem });
@@ -118,6 +118,22 @@ const UsuarioController = {
       console.error('Erro ao buscar usuários:', error);
       res.status(500).json({ mensagem: 'Erro interno do servidor.' });
     }
+  },
+
+  listarUsuarios: async (req, res) => {
+    try {
+      const usuarios = await userService.listarUsuarios();
+      res.status(200).json(usuarios);
+    } catch (error) {
+      res.status(500).json({ message: 'Erro ao buscar usuários.' });
+    }
+  },
+
+  listarLogsPorUsuario: async (req, res) => {
+    const {nome} = req.body;
+
+    const resposta = await userService.listarLogsPorUsuario(nome);
+    return res.status(resposta.status).json(resposta.logs || { mensagem: resposta.mensagem });
   }
 };
 

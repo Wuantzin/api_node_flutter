@@ -46,14 +46,15 @@ const userService = {
   },
 
   deletarUsuario: async ({email}) => {
+    console.log('Tentando deletar usuário com email:', email);
     try {
-      const rows = await User.buscarPorEmail(email);
-
-      if (!rows || rows.length === 0) {
+      const id = await User.getIdByEmail(email);
+      console.log('ID do usuário encontrado:', id);
+      if (!id) {
         return { status: 404, mensagem: 'Usuário não encontrado!' };
       }
 
-      await User.deletar({email});
+      await User.deletar({id});
       return { status: 200, mensagem: 'Usuário deletado com sucesso!' };
 
     } catch (err) {
@@ -127,6 +128,25 @@ const userService = {
       return { status: 500, mensagem: 'Erro no servidor!' };
     }
   },
+
+  listarUsuarios: async () => {
+      return await User.getAllUsuarios();
+  },
+
+  listarLogsPorUsuario: async (nome) => {
+    try {
+      console.log('Buscando logs para o usuário:', nome);
+      const logs = await User.getLogByUsuario(nome);
+      if (!logs || logs.length === 0) {
+        return { status: 404, mensagem: 'Nenhum log encontrado para este usuário.' };
+      }
+      console.log('Logs encontrados:', logs);
+      return { status: 200, logs };
+    } catch (err) {
+      console.error(err);
+      return { status: 500, mensagem: 'Erro ao buscar logs do usuário.' };
+    }
+  }
 }
 
 module.exports = userService;
