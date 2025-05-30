@@ -10,11 +10,9 @@ const Usuario = {
     },
 
     deletar: async (dados) => {
-      const { email } = dados;
-      const query = 'DELETE FROM usuarios WHERE email = ?';
-      return db.execute(query, [email]);
-
-    
+      const { id } = dados;
+      const query = 'prc_excluir_usuario(?)';
+      return db.execute(query, [id]);
     },
 
     atualizar: async (dados) => {
@@ -60,7 +58,27 @@ const Usuario = {
     getIdByNome: async (nome) => {
       const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE LOWER(nome) = ?', [nome.toLowerCase()]);
       return rows.length > 0 ? rows[0].id_usuario : null;
-    }
+    },
+
+    getLogByUsuario: async (nome) => {
+      const [rows] = await db.execute('SELECT * FROM logs WHERE id_usuario = (SELECT id_usuario FROM usuarios WHERE LOWER(nome) = ?)', [nome.toLowerCase()]);
+      return rows.length > 0 ? rows : null;
+    },
+
+    getLogById: async (id) => {
+      const [rows] = await db.execute('SELECT * FROM logs WHERE id_usuario = ?', [id]);
+      return rows.length > 0 ? rows : null;
+    },
+
+    getLogByAcao: async (acao) => {
+      const [rows] = await db.execute('SELECT * FROM logs WHERE LOWER(acao) = ?', [acao.toLowerCase()]);
+      return rows.length > 0 ? rows : null;
+    },
+
+    getAllUsuarios: async () => {
+      const [rows] = await db.execute('SELECT * FROM usuarios');
+      return rows.length > 0 ? rows : null;
+    },
 }
 
 module.exports = Usuario;
