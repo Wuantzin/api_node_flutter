@@ -29,9 +29,7 @@ const Usuario = {
     },
 
     buscarPorNome: async (nome) => {
-      console.log(`Buscando usuário por nome: ${nome}`);
       const [rows] = await db.execute('SELECT * FROM usuarios WHERE LOWER(nome) LIKE ?',[`%${nome.toLowerCase()}%`]);
-      console.log(`Usuários encontrados: ${rows.length}`);
       return rows.length > 0 ? [rows] : null;
     },
 
@@ -42,17 +40,25 @@ const Usuario = {
     },
 
     atualizarEmail: async (dados) => {
-      console.log(`Atualizando email do usuário com ID: ${dados.id}`);
-      console.log(`Novo email: ${dados.email}`);
       const { id, novoEmail } = dados;
       const query = 'CALL prc_atualizar_email(?, ?)';
       return db.execute(query, [id, novoEmail]);
     },
 
+    atualizarSenha: async (dados) => {
+      const { id, senha } = dados;
+      const query = 'CALL prc_atualizar_senha(?, ?)';
+      return db.execute(query, [id, senha]);
+    },
+
     getIdByEmail: async (email) => {
-      console.log(`Buscando ID do usuário com email: ${email}`);
       const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE email = ?', [email]);
       console.log(rows[0]);
+      return rows.length > 0 ? rows[0].id_usuario : null;
+    },
+
+    getIdByNome: async (nome) => {
+      const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE LOWER(nome) = ?', [nome.toLowerCase()]);
       return rows.length > 0 ? rows[0].id_usuario : null;
     }
 }

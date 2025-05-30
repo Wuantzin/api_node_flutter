@@ -1,7 +1,7 @@
 const express = require('express');
 const pool = require('../config/configdb.js');
 const Usuario = require('../Models/userModel.js');
-const Validacoes = require('../Services/validators.js');
+const Validacoes = require('../Utils/validators.js');
 const userService = require('../Services/userService.js');
 const app = express();
 const cors = require('cors');
@@ -23,7 +23,6 @@ const UsuarioController = {
   },
 
   logar: async (req, res) => { 
-    console.log('Tentando logar usuário.');
     const { email, senha } = req.body;
 
     const { valido, mensagem } = Validacoes.validarLogin({email, senha});
@@ -38,7 +37,6 @@ const UsuarioController = {
 
   deletar: async (req, res) => {
     const { email } = req.body;
-    console.log(`Tentando deletar usuário com email: ${email}`);
     
     const { valido, mensagem } = Validacoes.validarEmail({email});
     if (!valido) {
@@ -60,7 +58,6 @@ const UsuarioController = {
 
   atualizarNome: async (req, res) => {
     const { nome, email } = req.body;
-    console.log(`Tentando atualizar nome do usuário com email: ${email} para ${nome}`);
 
     const resposta = await userService.atualizarNomeUsuario({ nome, email });
     return res.status(resposta.status).json(resposta.mensagem);
@@ -71,11 +68,23 @@ const UsuarioController = {
 
     const { valido, mensagem } = Validacoes.validarEmail({ email: novoEmail });
     if (!valido) {
-      return res.status(400).json({ erro: mensagem });
+      return res.status(400).json(mensagem);
     }
 
     const resposta = await userService.atualizarEmailUsuario({ email: email, novoEmail: novoEmail });
-    return res.status(resposta.status).json({ erro: resposta.mensagem });
+    return res.status(resposta.status).json(resposta.mensagem );
+  },
+
+  atualizarSenha: async (req, res) => {
+    const { email, senha } = req.body;
+
+    const { valido, mensagem } = Validacoes.validarSenha({ senha });
+    if (!valido) {
+      return res.status(400).json(mensagem);
+    }
+
+    const resposta = await userService.atualizarSenhaUsuario({ email, senha });
+    return res.status(resposta.status).json(resposta.mensagem);
   },
 
   buscarPorEmail: async (req, res) => {
@@ -96,11 +105,9 @@ const UsuarioController = {
 
   buscarPorNome: async (req, res) => {
     const nome = req.params.nome; // ou req.params.nome se usar rota dinâmica
-    console.log('Nome recebido:', nome);
 
     try {
       const rows = await Usuario.buscarPorNome(nome);
-      console.log('Rows retornadas:', rows);
 
       if (rows) {
         return res.json(rows); // mostra as rows como JSON no Thunder Client

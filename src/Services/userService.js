@@ -1,5 +1,5 @@
-const { atualizarEmail } = require('../Controllers/userController.js');
 const User = require('../Models/userModel.js');
+const errorHandler = require('../Utils/error_handler.js');
 
 const userService = {
   cadastrarUsuario: async (dados) => {
@@ -10,14 +10,9 @@ const userService = {
 
     } catch (error) {
       console.error('Erro ao cadastrar usuário:', error);
-
-          if (error.code === 'ER_DUP_ENTRY') {
-      const campo = error.sqlMessage.includes('email') ? 'Email' :
-                    error.sqlMessage.includes('cpf') ? 'CPF' : 'Campo único';
-      return { status: 409, mensagem: `${campo} já está cadastrado.` };
+      let mensagem = errorHandler.error_DupEntry(error);
+      return { status: 500, mensagem: mensagem || 'Erro ao cadastrar usuário.' };
       }
-    }
-    return { status: 500, mensagem: 'Erro interno ao cadastrar usuário.' };
   },
 
   logarUsuario: async ({email, senha}) => {
@@ -86,9 +81,7 @@ const userService = {
 
   atualizarNomeUsuario: async ({nome, email}) => {
     try {
-      console.log(`Tentando atualizar nome do usuário com email: ${email} para ${nome}`);
       const id = await User.getIdByEmail(email);
-      console.log(`ID do usuário encontrado: ${id}`);
 
       if (!id) {
         return { status: 404, mensagem: 'Usuário não encontrado!' };
@@ -105,9 +98,7 @@ const userService = {
 
   atualizarEmailUsuario: async ({email, novoEmail}) => {
     try {
-      console.log(`Tentando atualizar email do usuário com email: ${email} para ${novoEmail}`);
       const id = await User.getIdByEmail(email);
-      console.log(`Usuário encontrado: ${id}`);
       if (!id) {
         return { status: 404, mensagem: 'Usuário não encontrado!' };
       }
@@ -119,7 +110,23 @@ const userService = {
       console.error(err);
       return { status: 500, mensagem: 'Erro no servidor!' };
     }
-  }
+  },
+
+  atualizarSenhaUsuario: async ({email, senha}) => {
+    try {
+      const id = await User.getIdByEmail(email);
+      if (!id) {
+        return { status: 404, mensagem: 'Usuário não encontrado!' };
+      }
+
+      await User.atualizarSenha({ id, senha });
+      return { status: 200, mensagem: 'Senha atualizada com sucesso!' };
+
+    } catch (err) {
+      console.error(err);
+      return { status: 500, mensagem: 'Erro no servidor!' };
+    }
+  },
 }
 
 module.exports = userService;
