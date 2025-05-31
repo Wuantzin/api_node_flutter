@@ -46,10 +46,8 @@ const userService = {
   },
 
   deletarUsuario: async ({email}) => {
-    console.log('Tentando deletar usuário com email:', email);
     try {
       const id = await User.getIdByEmail(email);
-      console.log('ID do usuário encontrado:', id);
       if (!id) {
         return { status: 404, mensagem: 'Usuário não encontrado!' };
       }
@@ -135,16 +133,27 @@ const userService = {
 
   listarLogsPorUsuario: async (nome) => {
     try {
-      console.log('Buscando logs para o usuário:', nome);
       const logs = await User.getLogByUsuario(nome);
       if (!logs || logs.length === 0) {
         return { status: 404, mensagem: 'Nenhum log encontrado para este usuário.' };
       }
-      console.log('Logs encontrados:', logs);
       return { status: 200, logs };
     } catch (err) {
       console.error(err);
       return { status: 500, mensagem: 'Erro ao buscar logs do usuário.' };
+    }
+  },
+
+  listarLogsPorAcao: async (acao) => {
+    try {
+      const logs = await User.getLogByAcao(acao);
+      if (!logs || logs.length === 0) {
+        return { status: 404, mensagem: 'Nenhum log encontrado para esta ação.' };
+      }
+      return { status: 200, logs };
+    } catch (err) {
+      console.error(err);
+      return { status: 500, mensagem: 'Erro ao buscar logs por ação.' };
     }
   }
 }

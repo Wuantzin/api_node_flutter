@@ -2,7 +2,6 @@ const db = require('../config/configdb');
 
 
 const Usuario = {
-    //query para criar o usuario no banco de dados
     criar: async (dados) => {
       const {nome, email, senha, cpf, celular} = dados;
       const query = 'CALL prc_inserir_usuario(?, ?, ?, ?, ?, ?)';
@@ -27,14 +26,14 @@ const Usuario = {
     },
 
     buscarPorNome: async (nome) => {
-      const [rows] = await db.execute('SELECT * FROM usuarios WHERE LOWER(nome) LIKE ?',[`%${nome.toLowerCase()}%`]);
+      const [rows] = await db.execute('SELECT * FROM usuarios WHERE LOWER(nome) LIKE ?',[nome]);
       return rows.length > 0 ? [rows] : null;
     },
 
     atualizarNome: async (dados) => {
       const { id, nome } = dados;
       const query = 'CALL prc_atualizar_nome(?, ?)';
-      return db.execute(query, [nome, id]);
+      return db.execute(query, [id, nome]);
     },
 
     atualizarEmail: async (dados) => {
@@ -50,22 +49,17 @@ const Usuario = {
     },
 
     getIdByEmail: async (email) => {
-      console.log(email);
       const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE email = ?', [email]);
-      console.log(rows[0]);
       return rows.length > 0 ? rows[0].id_usuario : null;
-      console.log('ID do usuário encontrado:', rows[0].id_usuario);
     },
 
     getIdByNome: async (nome) => {
-      const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE nome = ?', [nome.toLowerCase()]);
+      const [rows] = await db.execute('SELECT id_usuario FROM usuarios WHERE nome = ?', [nome]);
       return rows.length > 0 ? rows[0].id_usuario : null;
     },
 
     getLogByUsuario: async (nome) => {
-      console.log(nome);
       const [rows] = await db.execute(`SELECT * FROM logs WHERE usuario = ?`, [nome]);
-      console.log('Logs do usuário encontrados:', rows);
       return rows.length > 0 ? rows : null;
     },
 
@@ -75,14 +69,14 @@ const Usuario = {
     },
 
     getLogByAcao: async (acao) => {
-      const [rows] = await db.execute('SELECT * FROM logs WHERE LOWER(acao) = ?', [acao.toLowerCase()]);
+      const [rows] = await db.execute('SELECT * FROM logs WHERE acao = ?', [acao]);
       return rows.length > 0 ? rows : null;
     },
 
     getAllUsuarios: async () => {
       const [rows] = await db.execute('SELECT * FROM usuarios');
       return rows.length > 0 ? rows : null;
-    },
+    }
 }
 
 module.exports = Usuario;

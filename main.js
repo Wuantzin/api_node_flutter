@@ -22,3 +22,4 @@ app.listen(3000, () => {
   app.get('/buscar/nome/:nome', User.buscarPorNome);
   app.get('/usuarios', User.listarUsuarios);
   app.get('/logs/usuario', User.listarLogsPorUsuario);
+  app.get('/logs/acao', User.listarLogsPorAcao);

@@ -31,20 +31,19 @@ const UsuarioController = {
     }
 
     const resposta = await userService.logarUsuario({ email, senha });
-    return res.status(resposta.status).json({ erro: resposta.mensagem });
+    return res.status(resposta.status).json(resposta.mensagem);
 
 },
 
   deletar: async (req, res) => {
     const { email } = req.body;
-    console.log(email);
     const { valido, mensagem } = Validacoes.validarEmail({email});
     if (!valido) {
-      return res.status(400).json({ erro: mensagem });
+      return res.status(400).json({mensagem });
     }
 
     const resposta = await userService.deletarUsuario({email});
-    return res.status(resposta.status).json({ erro: resposta.mensagem });
+    return res.status(resposta.status).json(resposta.mensagem);
 
   }, 
 
@@ -52,7 +51,7 @@ const UsuarioController = {
     const { email, nome, senha, celular, novo_email } = req.body;
 
     const resposta = await userService.atualizarUsuario({ email, senha, nome, celular, novo_email });
-    return res.status(resposta.status).json({erro: resposta.mensagem});
+    return res.status(resposta.status).json(resposta.mensagem );
 
   },
 
@@ -88,12 +87,12 @@ const UsuarioController = {
   },
 
   buscarPorEmail: async (req, res) => {
-    const email = req.params.email; // ou req.params.email se usar rota dinâmica
+    const email = req.params.email;
     try {
       const usuario = await Usuario.buscarPorEmail(email);
 
       if (usuario) {
-        return res.json(usuario); // mostra a row como JSON no Thunder Client
+        return res.json(usuario); 
       } else {
         res.status(404).json({ mensagem: 'Usuário não encontrado.' });
       }
@@ -104,13 +103,13 @@ const UsuarioController = {
   },
 
   buscarPorNome: async (req, res) => {
-    const nome = req.params.nome; // ou req.params.nome se usar rota dinâmica
+    const nome = req.params.nome; 
 
     try {
       const rows = await Usuario.buscarPorNome(nome);
 
       if (rows) {
-        return res.json(rows); // mostra as rows como JSON no Thunder Client
+        return res.json(rows); 
       } else {
         res.status(404).json({ mensagem: 'Nenhum usuário encontrado com esse nome.' });
       }
@@ -133,6 +132,13 @@ const UsuarioController = {
     const {nome} = req.body;
 
     const resposta = await userService.listarLogsPorUsuario(nome);
+    return res.status(resposta.status).json(resposta.logs || { mensagem: resposta.mensagem });
+  },
+
+  listarLogsPorAcao: async (req, res) => {
+    const { acao } = req.body;
+
+    const resposta = await userService.listarLogsPorAcao(acao);
     return res.status(resposta.status).json(resposta.logs || { mensagem: resposta.mensagem });
   }
 };
