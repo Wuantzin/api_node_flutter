@@ -31,12 +31,13 @@ const UsuarioController = {
     }
 
     const resposta = await userService.logarUsuario({ email, senha });
-    return res.status(resposta.status).json(resposta.mensagem);
+    return res.status(resposta.status).json({ erro: resposta.mensage, dados: resposta.usuario });
 
 },
 
   deletar: async (req, res) => {
     const { email } = req.body;
+    console.log(email)
     const { valido, mensagem } = Validacoes.validarEmail({email});
     if (!valido) {
       return res.status(400).json({mensagem });
@@ -49,6 +50,7 @@ const UsuarioController = {
 
   atualizar: async (req, res) => {
     const { email, nome, senha, celular, novo_email } = req.body;
+    console.log ("email:", email, "novo email:", novo_email, "nome:", nome, "senha:", senha, "celular:", celular)
 
     const resposta = await userService.atualizarUsuario({ email, senha, nome, celular, novo_email });
     return res.status(resposta.status).json(resposta.mensagem );
@@ -125,6 +127,16 @@ const UsuarioController = {
       res.status(200).json(usuarios);
     } catch (error) {
       res.status(500).json({ message: 'Erro ao buscar usuários.' });
+    }
+  },
+
+  listarLogs: async (req, res) => {
+    try {
+      console.log('buscando log')
+      const logs = await userService.listarLogs();
+      res.status(200).json(logs);
+    } catch (error) {
+      res.status(500).json({ message: 'Erro ao buscar Logs.'});
     }
   },
 

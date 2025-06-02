@@ -131,6 +131,10 @@ const userService = {
       return await User.getAllUsuarios();
   },
 
+  listarLogs: async () => {
+    return await User.getAllLogs();
+  },
+
   listarLogsPorUsuario: async (nome) => {
     try {
       const logs = await User.getLogByUsuario(nome);
@@ -155,7 +159,7 @@ const userService = {
       console.error(err);
       return { status: 500, mensagem: 'Erro ao buscar logs por ação.' };
     }
-  }
+  },
 }
 
 module.exports = userService;

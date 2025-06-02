@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const User = require('./src/Controllers/userController.js');
 const Adm = require('./src/Controllers/admController.js');
+const Alerta = require('./src/Controllers/alertController.js');
+const alertController = require('./src/Controllers/alertController.js');
 app.use(express.json());
 
 
@@ -23,3 +25,6 @@ app.listen(3000, () => {
   app.get('/usuarios', User.listarUsuarios);
   app.get('/logs/usuario', User.listarLogsPorUsuario);
   app.get('/logs/acao', User.listarLogsPorAcao);
+  app.get('/admin/usuarios', User.listarUsuarios);
+  app.get('/admin/logs', User.listarLogs);
+  app.post('/alerta', alertController.postar);

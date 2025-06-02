@@ -73,6 +73,11 @@ const Usuario = {
       return rows.length > 0 ? rows : null;
     },
 
+    getAllLogs: async () => {
+      const [rows] = await db.execute('SELECT * FROM logs')
+      return rows.length > 0 ? rows : null;
+    },
+
     getAllUsuarios: async () => {
       const [rows] = await db.execute('SELECT * FROM usuarios');
       return rows.length > 0 ? rows : null;
