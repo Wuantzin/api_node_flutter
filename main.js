@@ -27,4 +27,4 @@ app.listen(3000, () => {
   app.get('/logs/acao', User.listarLogsPorAcao);
   app.get('/admin/usuarios', User.listarUsuarios);
   app.get('/admin/logs', User.listarLogs);
-  app.post('/alerta', alertController.postar);
+  app.post('/alerta', alertController.postarAlerta);
